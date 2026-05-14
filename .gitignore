@@ -2,9 +2,6 @@
 *.pptx
 ~$*.pptx
 
-# PDF files
-*.pdf
-
 # Archives
 *.tar.gz
 
