@@ -808,6 +808,7 @@ HPC Systems Analyst, ASU Research Computing
 DETECT — Pfeifer Lab, Arizona State University
 
 Slides & examples: `github.com/acchapm1/rmacc-2026`
+Live deck: `acchapm1.github.io/rmacc-2026`
 
 <!--
 PRESENTER NOTES
