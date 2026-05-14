@@ -1,0 +1,6 @@
+samples:
+  - sampleA
+  - sampleB
+
+reference: data/ref
+outdir:    results

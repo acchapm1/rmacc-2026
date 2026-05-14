@@ -1,0 +1,90 @@
+# =============================================================================
+# Snakemake 7 example — illustrates patterns retired in Snakemake 9.
+# Companion to the Snakemake 9 example in ../snakemake9/.
+#
+# Demonstrated (all visible in the rules below):
+#   - `singularity:` repeated on every containerized rule
+#   - resources written as fixed integers / strings ('15m', '4h')
+#   - no `attempt`-based backoff
+#   - bare `python` invoked from shell rules
+#   - resources live in the Snakefile, not in a profile
+#   - submission via the legacy --cluster flag (see run.sh)
+# =============================================================================
+
+configfile: "config.yaml"
+
+SAMPLES   = config["samples"]
+REF       = config["reference"]
+OUTDIR    = config["outdir"]
+CONTAINER = "container/tools.sif"
+
+
+rule all:
+    input:
+        expand(f"{OUTDIR}/{{sample}}.report.txt", sample=SAMPLES)
+
+
+# ---- 1. Split input: light, fast, Python-only -------------------------------
+rule split_input:
+    input:
+        f"{REF}/{{sample}}.fa"
+    output:
+        f"{OUTDIR}/{{sample}}.chunks.done"
+    resources:
+        mem_mb  = 4000,
+        runtime = '15m'          # string format — Snakemake 7 accepts this
+    shell:
+        # Bare `python` — picks up whatever interpreter is first on PATH at
+        # the compute node, which is rarely the conda env you activated on
+        # the login node. Source of ModuleNotFoundError surprises.
+        "python scripts/split_input.py "
+        "--in {input} --outdir {OUTDIR}/{wildcards.sample}_chunks "
+        "&& touch {output}"
+
+
+# ---- 2. Align: containerized, heavy -----------------------------------------
+rule align:
+    input:
+        chunks = f"{OUTDIR}/{{sample}}.chunks.done",
+        ref    = f"{REF}/genome.fa"
+    output:
+        f"{OUTDIR}/{{sample}}.bam"
+    singularity: CONTAINER       # per-rule directive — repeated below
+    resources:
+        mem_mb  = 32000,
+        runtime = '4h'           # string; no retry-with-more on OOM/walltime
+    threads: 8
+    shell:
+        "bwa mem -t {threads} {input.ref} "
+        "{OUTDIR}/{wildcards.sample}_chunks/*.fa "
+        "| samtools sort -@ {threads} -o {output} -"
+
+
+# ---- 3. Call variants: containerized, heavy ---------------------------------
+rule call_variants:
+    input:
+        bam = f"{OUTDIR}/{{sample}}.bam",
+        ref = f"{REF}/genome.fa"
+    output:
+        f"{OUTDIR}/{{sample}}.vcf"
+    singularity: CONTAINER       # repeated again — easy to forget on a new rule
+    resources:
+        mem_mb  = 16000,
+        runtime = '2h'
+    threads: 4
+    shell:
+        "gatk HaplotypeCaller -R {input.ref} -I {input.bam} -O {output}"
+
+
+# ---- 4. Summarize: Python-only ----------------------------------------------
+rule summarize:
+    input:
+        f"{OUTDIR}/{{sample}}.vcf"
+    output:
+        f"{OUTDIR}/{{sample}}.report.txt"
+    resources:
+        mem_mb  = 2000,
+        runtime = '10m'
+    shell:
+        # Bare `python` again — same gotcha as split_input.
+        "python scripts/summarize.py --vcf {input} --out {output}"

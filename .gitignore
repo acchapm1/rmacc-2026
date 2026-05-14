@@ -1,0 +1,24 @@
+# PowerPoint files
+*.pptx
+~$*.pptx
+
+# PDF files
+*.pdf
+
+# Archives
+*.tar.gz
+
+# Claude-related files
+CLAUDE.md
+.claude/
+.claude*
+claude.md
+
+# Talk directory
+talk/
+
+# macOS
+.DS_Store
+
+# Maestri
+.maestri/

@@ -1,0 +1,63 @@
+# =============================================================================
+# Workflow profile — passed as --workflow-profile profiles/slurm
+#
+# This file replaces the giant --cluster shell string from the Snakemake 7
+# invocation. It's declarative, diffable, reviewable, and lives in version
+# control alongside the Snakefile.
+# =============================================================================
+
+# ---- Executor settings ------------------------------------------------------
+executor: slurm                  # activates the snakemake-executor-plugin-slurm
+jobs: 100                        # max concurrent SLURM jobs
+cores: 100
+retries: 3                       # Snakemake-level retries on top of any
+                                 # per-rule attempt logic
+latency-wait: 30                 # seconds to wait for networked-fs to settle
+scheduler: greedy
+slurm-logdir: logs/slurm         # replaces every per-rule -o/-e from Sn7
+
+# ---- Rate limiting ----------------------------------------------------------
+# The two lines that mattered most operationally. They keep slurmctld from
+# being hammered when a wide rule fans out. Without these, status-check
+# bursts cause socket timeouts and Snakemake silently loses track of jobs.
+max-jobs-per-timespan: 9/1s
+max-status-checks-per-second: 2
+
+# ---- Default resources ------------------------------------------------------
+# Used by any rule that doesn't appear in set-resources below. The partition
+# selector uses these to pick a partition when nothing more specific applies.
+default-resources:
+  mem_mb:    8000
+  runtime:   30                  # integer minutes (not '30m')
+  cpus_per_task: 8
+
+# ---- Per-rule resources -----------------------------------------------------
+# Migrated out of the Snakefile. The workflow author ships the Snakefile; the
+# cluster operator owns this block. A bad tuning is a one-file git revert.
+#
+# Notice the `lambda wildcards, attempt: ...` form on the heavy rules — this
+# is the attempt-based backoff. Attempt 1 asks for a modest amount; if SLURM
+# kills the job for OOM or walltime, Snakemake retries with attempt=2, which
+# evaluates to a larger ask. Most jobs succeed on attempt 1 — but the tail
+# of outliers auto-recovers without manual intervention.
+set-resources:
+
+  split_input:
+    mem_mb:        4000
+    runtime:       15
+    cpus_per_task: 2
+
+  align:
+    mem_mb:        lambda wildcards, attempt: 32000 + (16000 * (attempt - 1))
+    runtime:       lambda wildcards, attempt: 240   + (60    * (attempt - 1))
+    cpus_per_task: 8
+
+  call_variants:
+    mem_mb:        lambda wildcards, attempt: 16000 + (8000  * (attempt - 1))
+    runtime:       lambda wildcards, attempt: 120   + (30    * (attempt - 1))
+    cpus_per_task: 4
+
+  summarize:
+    mem_mb:        2000
+    runtime:       10
+    cpus_per_task: 1

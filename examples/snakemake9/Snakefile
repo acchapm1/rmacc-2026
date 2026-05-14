@@ -1,0 +1,108 @@
+# =============================================================================
+# Snakemake 9 example — the patterns we migrated to.
+# Companion to the Snakemake 7 example in ../snakemake7/.
+#
+# Demonstrated:
+#   - Global `container:` directive — every rule inherits it
+#   - Resources live in profiles/slurm/config.yaml (set-resources)
+#     not in the Snakefile
+#   - `python_exec` resolved from $CONDA_PREFIX at workflow load time —
+#     no more bare `python` in shell rules
+#   - Submission via --executor slurm + --workflow-profile (see run.sh)
+#   - Partition auto-selection via --slurm-partition-config (see public.yaml)
+#
+# Note what is NOT in this Snakefile compared to ../snakemake7/Snakefile:
+#   - No per-rule `singularity:` directives
+#   - No per-rule `resources:` blocks
+#   - No string-typed runtimes
+# =============================================================================
+
+import os
+
+configfile: "config.yaml"
+
+SAMPLES   = config["samples"]
+REF       = config["reference"]
+OUTDIR    = config["outdir"]
+
+
+# ---- Global container --------------------------------------------------------
+# One directive at the top — every rule inherits it. Adding a new rule no
+# longer creates an opportunity to forget the per-rule singularity: line.
+container: "container/tools.sif"
+
+
+# ---- Python interpreter resolved once at workflow load ----------------------
+# $CONDA_PREFIX is set when the user `conda activate`s the workflow env on the
+# login node, and exported into the SLURM job's environment by the driver.
+# The compute node may have a different $PATH — bare `python` will pick the
+# wrong interpreter. Resolving from $CONDA_PREFIX avoids that.
+def get_python_executable():
+    conda_prefix = os.environ.get("CONDA_PREFIX", "")
+    if conda_prefix:
+        candidate = os.path.join(conda_prefix, "bin", "python3")
+        if os.path.exists(candidate):
+            return candidate
+    return "python3"
+
+
+python_exec = get_python_executable()
+
+
+rule all:
+    input:
+        expand(f"{OUTDIR}/{{sample}}.report.txt", sample=SAMPLES)
+
+
+# ---- 1. Split input: light, fast, Python-only -------------------------------
+# No resources: block. The values come from profiles/slurm/config.yaml.
+# No singularity: line. The global container: directive applies.
+rule split_input:
+    input:
+        f"{REF}/{{sample}}.fa"
+    output:
+        f"{OUTDIR}/{{sample}}.chunks.done"
+    params:
+        python_exec = python_exec
+    shell:
+        "{params.python_exec} scripts/split_input.py "
+        "--in {input} --outdir {OUTDIR}/{wildcards.sample}_chunks "
+        "&& touch {output}"
+
+
+# ---- 2. Align: heavy --------------------------------------------------------
+rule align:
+    input:
+        chunks = f"{OUTDIR}/{{sample}}.chunks.done",
+        ref    = f"{REF}/genome.fa"
+    output:
+        f"{OUTDIR}/{{sample}}.bam"
+    threads: 8
+    shell:
+        "bwa mem -t {threads} {input.ref} "
+        "{OUTDIR}/{wildcards.sample}_chunks/*.fa "
+        "| samtools sort -@ {threads} -o {output} -"
+
+
+# ---- 3. Call variants: heavy ------------------------------------------------
+rule call_variants:
+    input:
+        bam = f"{OUTDIR}/{{sample}}.bam",
+        ref = f"{REF}/genome.fa"
+    output:
+        f"{OUTDIR}/{{sample}}.vcf"
+    threads: 4
+    shell:
+        "gatk HaplotypeCaller -R {input.ref} -I {input.bam} -O {output}"
+
+
+# ---- 4. Summarize: Python-only ----------------------------------------------
+rule summarize:
+    input:
+        f"{OUTDIR}/{{sample}}.vcf"
+    output:
+        f"{OUTDIR}/{{sample}}.report.txt"
+    params:
+        python_exec = python_exec
+    shell:
+        "{params.python_exec} scripts/summarize.py --vcf {input} --out {output}"

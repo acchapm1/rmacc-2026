@@ -1,0 +1,30 @@
+# =============================================================================
+# Partition configuration — passed as --slurm-partition-config public.yaml
+#
+# The SLURM executor plugin matches each job's resource request against this
+# table and picks the smallest partition that can satisfy it. No more
+# hardcoded -p flag; no rule-by-rule partition logic in the Snakefile.
+#
+# Example fits with the set-resources in config.yaml:
+#   split_input  (4 GB,  15 min) -> htc      (fits, smallest)
+#   align        (32 GB, 4 h)    -> public   (htc can't hold 4h)
+#   call_variants(16 GB, 2 h)    -> public
+#   summarize    (2 GB,  10 min) -> htc
+#
+# Editing this file is how the cluster operator teaches the workflow about a
+# new partition without touching the Snakefile.
+# =============================================================================
+
+partitions:
+
+  htc:
+    max_runtime_minutes: 240        # 4 hours
+    max_mem_mb:          64000      # 64 GB
+    max_cpus_per_task:   16
+    max_nodes:           1
+
+  public:
+    max_runtime_minutes: 5760       # 4 days
+    max_mem_mb:          512000     # 512 GB
+    max_cpus_per_task:   64
+    max_nodes:           1
