@@ -8,7 +8,8 @@
 #     not in the Snakefile
 #   - `python_exec` resolved from $CONDA_PREFIX at workflow load time —
 #     no more bare `python` in shell rules
-#   - Submission via --executor slurm + --workflow-profile (see run.sh)
+#   - Submission via the snakemake-executor-plugin-slurm (executor: slurm
+#     declared in the profile; see run.sh / sbatch.sh)
 #   - Partition auto-selection via --slurm-partition-config (see public.yaml)
 #
 # Note what is NOT in this Snakefile compared to ../snakemake7/Snakefile:
@@ -22,6 +23,7 @@ import os
 configfile: "config.yaml"
 
 SAMPLES   = config["samples"]
+READS_DIR = config["reads_dir"]
 REF       = config["reference"]
 OUTDIR    = config["outdir"]
 
@@ -55,39 +57,49 @@ rule all:
 
 
 # ---- 1. Split input: light, fast, Python-only -------------------------------
-# No resources: block. The values come from profiles/slurm/config.yaml.
-# No singularity: line. The global container: directive applies.
+# Splits a per-sample FASTQ into chunked FASTA files for the aligner. No
+# resources: block — values come from profiles/slurm/config.yaml. No
+# singularity: line — the global container: directive applies.
 rule split_input:
     input:
-        f"{REF}/{{sample}}.fa"
+        f"{READS_DIR}/{{sample}}.fq"
     output:
         f"{OUTDIR}/{{sample}}.chunks.done"
     params:
-        python_exec = python_exec
+        python_exec = python_exec,
+        chunk_dir   = f"{OUTDIR}/{{sample}}_chunks"
     shell:
         "{params.python_exec} scripts/split_input.py "
-        "--in {input} --outdir {OUTDIR}/{wildcards.sample}_chunks "
+        "--in {input} --outdir {params.chunk_dir} "
         "&& touch {output}"
 
 
 # ---- 2. Align: heavy --------------------------------------------------------
+# Concatenates the chunks, aligns with bwa mem, sorts with samtools, attaches
+# a read group (HaplotypeCaller requires one), and indexes the BAM.
 rule align:
     input:
         chunks = f"{OUTDIR}/{{sample}}.chunks.done",
         ref    = f"{REF}/genome.fa"
     output:
-        f"{OUTDIR}/{{sample}}.bam"
+        bam = f"{OUTDIR}/{{sample}}.bam",
+        bai = f"{OUTDIR}/{{sample}}.bam.bai"
+    params:
+        chunk_dir = f"{OUTDIR}/{{sample}}_chunks",
+        rg        = r"@RG\tID:{sample}\tSM:{sample}\tLB:{sample}\tPL:ILLUMINA"
     threads: 8
     shell:
-        "bwa mem -t {threads} {input.ref} "
-        "{OUTDIR}/{wildcards.sample}_chunks/*.fa "
-        "| samtools sort -@ {threads} -o {output} -"
+        "cat {params.chunk_dir}/chunk_*.fa "
+        "| bwa mem -t {threads} -R '{params.rg}' {input.ref} - "
+        "| samtools sort -@ {threads} -o {output.bam} - "
+        "&& samtools index {output.bam}"
 
 
 # ---- 3. Call variants: heavy ------------------------------------------------
 rule call_variants:
     input:
         bam = f"{OUTDIR}/{{sample}}.bam",
+        bai = f"{OUTDIR}/{{sample}}.bam.bai",
         ref = f"{REF}/genome.fa"
     output:
         f"{OUTDIR}/{{sample}}.vcf"

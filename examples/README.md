@@ -30,6 +30,10 @@ examples/
     ├── env.yml                     # mamba env: snakemake 9.5.1 + slurm executor plugin
     ├── run.sh                      # login-node invocation
     ├── sbatch.sh                   # driver-as-SLURM-job invocation
+    ├── scripts/
+    │   ├── fetch_example_data.sh   # downloads E. coli ref + simulates reads
+    │   ├── split_input.py          # rule: split_input
+    │   └── summarize.py            # rule: summarize
     ├── container/
     │   ├── README.md               # build / test instructions
     │   └── tools.def               # Apptainer recipe — bwa, samtools, gatk
@@ -80,17 +84,21 @@ diff -u snakemake7/run.sh    snakemake9/run.sh
 
 ## How to use these examples
 
-These are **illustrative, not runnable end-to-end** — the input FASTA and
-reference paths in each `config.yaml` are placeholders, and `snakemake7/`
-intentionally has no working container build. To exercise them:
+`snakemake9/` is **runnable end-to-end** on any SLURM cluster with apptainer —
+it ships a `scripts/fetch_example_data.sh` that builds a tiny synthetic dataset
+(E. coli + simulated reads, <10 MB total). See `snakemake9/README.md` for the
+exact steps.
+
+`snakemake7/` is **illustrative only** — it intentionally has no container
+build and the legacy `--cluster` submission would need cluster-specific
+sbatch flags filled in. Read it as an archive of patterns to compare against,
+not a thing to run.
 
 1. Read the per-directory `README.md` for the patterns being demonstrated.
 2. `diff` matching files between `snakemake7/` and `snakemake9/` to see the
    migration mechanically.
-3. For the Snakemake 9 example, build the container with
-   `apptainer build snakemake9/container/tools.sif snakemake9/container/tools.def`
-   and create the env with `mamba env create -f snakemake9/env.yml` — that
-   gets you a workflow you could point at real data with minor edits.
+3. Run `snakemake9/` end-to-end if you want to prove the wiring works on
+   your cluster.
 
 ## Related files in the repo root
 
