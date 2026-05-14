@@ -36,6 +36,8 @@ Arizona State University Research Computing
 
 RMACC HPC Symposium 2026 · Boise, ID
 
+`github.com/acchapm1/rmacc-2026`
+
 <!--
 PRESENTER NOTES
 
