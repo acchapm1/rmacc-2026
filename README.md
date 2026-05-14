@@ -3,6 +3,8 @@
 Talk materials for **RMACC 2026** on migrating a production Snakemake workflow
 from Snakemake 7 to Snakemake 9 on a SLURM cluster.
 
+**View the slides:** <https://acchapm1.github.io/rmacc-2026/>
+
 ## Contents
 
 - `rmacc-slides.md` — talk slides (Markdown source)
