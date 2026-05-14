@@ -266,6 +266,39 @@ How it applies to Snakemake: scientists describe their recipe in terms of files 
 
 # The Breaking Change
 
+- **Snakemake 8 (Feb 2024):** `--cluster` deprecated. Executor plugin interface introduced.
+- **Snakemake 9 (Sep 2024):** `--cluster` **removed**.
+- Every HPC-bound Snakemake 7 workflow needs migration. There is no `--cluster` shim.
+
+**The new model:** scheduler integration moves out of the CLI flag and into a **plugin** that Snakemake loads.
+
+```bash
+pip install snakemake-executor-plugin-slurm
+snakemake --executor slurm ...
+```
+
+The plugin speaks SLURM natively — submits via `sbatch`, tracks state via `sacct`, handles retries, applies rate limits, picks partitions. It's not just a different flag; it's a different relationship with the scheduler.
+
+<!--
+PRESENTER NOTES
+
+What actually happened in the Snakemake project.
+
+Snakemake 8 came out in February 2024. The big change was: --cluster is deprecated. We're moving to an executor plugin interface instead. You'll get a deprecation warning if you use the old flag, but it still works.
+
+Snakemake 9 came out in September 2024 and removed --cluster entirely. If you upgrade to Snakemake 9 with a workflow that depends on --cluster, your workflow stops working. There is no compatibility shim. There is no --legacy-cluster flag. It's gone.
+
+So if you're running Snakemake 7 today and you're on a SLURM cluster, you have a deadline. It's not "this year"; it's "the next time you do a major upgrade." The migration isn't optional, and there's no half-step.
+
+The new model: instead of a flag that takes a string, scheduler integration is a *plugin* that Snakemake loads at runtime. You pip install it, you tell snakemake which executor to use, and the plugin owns the integration.
+
+The plugin uses SLURM properly — it submits with sbatch but it polls with sacct, with sensible backoff. It implements rate limiting. It handles automatic retries. It picks partitions. It's not just a refactor of --cluster; it's a different *architecture* for how Snakemake talks to your scheduler.
+-->
+
+---
+
+# The Breaking Change
+
 <img src="img/easybutton-transparent.png" style="position: absolute; top: 50px; left: 850px; width: 324px; height: 324px; opacity: 0.5;" />
 
 - **Snakemake 8 (Feb 2024):** `--cluster` deprecated. Executor plugin interface introduced.

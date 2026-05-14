@@ -44,7 +44,7 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
+;" data-marpit-pagination-total="23" data-size="16:9">
 <h1 id="updating-and-optimizing-mutation-detection-pipeline">Updating and Optimizing Mutation Detection Pipeline</h1>
 <h2 id="snakemake-7-%E2%86%92-9-on-slurm">Snakemake 7 → 9 on SLURM</h2>
 <p>Alan Chapman — HPC Systems Analyst<br />
@@ -89,7 +89,7 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
+;" data-marpit-pagination-total="23" data-size="16:9">
 <h1 id="detect-in-30-seconds">DETECT in 30 Seconds</h1>
 <p><strong>DNM Extraction Through Empirical Cutoff Thresholds</strong></p>
 <ul>
@@ -137,7 +137,7 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
+;" data-marpit-pagination-total="23" data-size="16:9">
 <h1 id="why-bother--results-first">Why Bother — Results First</h1>
 <table>
 <thead>
@@ -238,7 +238,7 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
+;" data-marpit-pagination-total="23" data-size="16:9">
 <h1 id="what---cluster-actually-was">What <code>--cluster</code> Actually Was</h1>
 <p>In Snakemake 7, <code>--cluster</code> took a <strong>shell string</strong> that Snakemake would interpolate per job and hand to your scheduler.</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-bash">snakemake --cluster <span class="hljs-string">&quot;sbatch -n {threads} --mem={resources.mem_mb} \
@@ -285,7 +285,7 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
+;" data-marpit-pagination-total="23" data-size="16:9">
 <h1 id="the-real-detect-snakemake-7-invocation">The Real DETECT Snakemake 7 Invocation</h1>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-bash">sbatch -n1 --job-name demo_detect_superjob \
   -o logs/demo_detect.out -e logs/demo_detect.err \
@@ -339,7 +339,7 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
+;" data-marpit-pagination-total="23" data-size="16:9">
 <h1 id="the-real-detect-snakemake-7-invocation-1">The Real DETECT Snakemake 7 Invocation</h1>
 <img src="img/nestingdolls.png" style="position: absolute; top: 50px; left: 903px; width: 278px; height: 242px; opacity: 0.5;" />
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-bash">sbatch -n1 --job-name demo_detect_superjob \
@@ -394,7 +394,7 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
+;" data-marpit-pagination-total="23" data-size="16:9">
 <h1 id="why-it-hurt-at-scale">Why It Hurt at Scale</h1>
 <ul>
 <li><strong>No rate limiting</strong> — Snakemake fires <code>sbatch</code> and <code>squeue</code> as fast as the DAG allows. SLURM's slurmctld socket → timeouts and <code>slurm_load_jobs error: Socket timed out</code> failures. Random rules die.</li>
@@ -441,9 +441,8 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
+;" data-marpit-pagination-total="23" data-size="16:9">
 <h1 id="the-breaking-change">The Breaking Change</h1>
-<img src="img/easybutton-transparent.png" style="position: absolute; top: 50px; left: 850px; width: 324px; height: 324px; opacity: 0.5;" />
 <ul>
 <li><strong>Snakemake 8 (Feb 2024):</strong> <code>--cluster</code> deprecated. Executor plugin interface introduced.</li>
 <li><strong>Snakemake 9 (Sep 2024):</strong> <code>--cluster</code> <strong>removed</strong>.</li>
@@ -491,17 +490,19 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
-<h1 id="what-the-plugin-gives-you-for-free">What the Plugin Gives You for Free</h1>
+;" data-marpit-pagination-total="23" data-size="16:9">
+<h1 id="the-breaking-change-1">The Breaking Change</h1>
+<img src="img/easybutton-transparent.png" style="position: absolute; top: 50px; left: 850px; width: 324px; height: 324px; opacity: 0.5;" />
 <ul>
-<li><strong>Native job submission</strong> — no template string. Resources go through the plugin's typed interface.</li>
-<li><strong>Native status polling</strong> — proper <code>sacct</code> queries with backoff, not hammering <code>squeue</code> in a loop.</li>
-<li><strong>Rate limiting</strong> as a first-class config knob.</li>
-<li><strong>Automatic partition selection</strong> when given a partitions YAML.</li>
-<li><strong>Retry semantics</strong> wired into Snakemake's own attempt counter.</li>
-<li><strong>Profile-based config</strong> — submission settings live in YAML, not in your shell history.</li>
+<li><strong>Snakemake 8 (Feb 2024):</strong> <code>--cluster</code> deprecated. Executor plugin interface introduced.</li>
+<li><strong>Snakemake 9 (Sep 2024):</strong> <code>--cluster</code> <strong>removed</strong>.</li>
+<li>Every HPC-bound Snakemake 7 workflow needs migration. There is no <code>--cluster</code> shim.</li>
 </ul>
-<p>There's also <code>snakemake-executor-plugin-cluster-generic</code> (a <code>--cluster</code> workalike). <strong>Don't use it for new work.</strong> It exists for the migration off-ramp; the SLURM plugin is the destination.</p>
+<p><strong>The new model:</strong> scheduler integration moves out of the CLI flag and into a <strong>plugin</strong> that Snakemake loads.</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-bash">pip install snakemake-executor-plugin-slurm
+snakemake --executor slurm ...
+</code></pre>
+<p>The plugin speaks SLURM natively — submits via <code>sbatch</code>, tracks state via <code>sacct</code>, handles retries, applies rate limits, picks partitions. It's not just a different flag; it's a different relationship with the scheduler.</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="10" data-class="invert" data-paginate="true" data-theme="default" data-style="section {
   font-size: 22px;
@@ -539,23 +540,17 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
-<h1 id="invocation-before-and-after">Invocation: Before and After</h1>
-<p><strong>Snakemake 7</strong></p>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-bash">sbatch --wrap <span class="hljs-string">&quot;snakemake --configfile config.json \
-  --cluster &#x27;sbatch -n {threads} --mem={resources.mem_mb} -t 01:00:00 ...&#x27; \
-  -j 100 --latency-wait 60 --rerun-incomplete&quot;</span>
-</code></pre>
-<p><strong>Snakemake 9</strong></p>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-bash">snakemake -p --snakefile Snakefile \
-    --configfile work/config/config.json \
-    --executor slurm \
-    --workflow-profile profiles/slurm \
-    --slurm-partition-config profiles/slurm/public.yaml \
-    --scheduler greedy -j 100 --cores 100 \
-    --latency-wait 30 --retries 3 --rerun-incomplete
-</code></pre>
-<p>Two new flags carry most of the meaning: <code>--workflow-profile</code> and <code>--slurm-partition-config</code>. Everything else lives in YAML now.</p>
+;" data-marpit-pagination-total="23" data-size="16:9">
+<h1 id="what-the-plugin-gives-you-for-free">What the Plugin Gives You for Free</h1>
+<ul>
+<li><strong>Native job submission</strong> — no template string. Resources go through the plugin's typed interface.</li>
+<li><strong>Native status polling</strong> — proper <code>sacct</code> queries with backoff, not hammering <code>squeue</code> in a loop.</li>
+<li><strong>Rate limiting</strong> as a first-class config knob.</li>
+<li><strong>Automatic partition selection</strong> when given a partitions YAML.</li>
+<li><strong>Retry semantics</strong> wired into Snakemake's own attempt counter.</li>
+<li><strong>Profile-based config</strong> — submission settings live in YAML, not in your shell history.</li>
+</ul>
+<p>There's also <code>snakemake-executor-plugin-cluster-generic</code> (a <code>--cluster</code> workalike). <strong>Don't use it for new work.</strong> It exists for the migration off-ramp; the SLURM plugin is the destination.</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="11" data-class="invert" data-paginate="true" data-theme="default" data-style="section {
   font-size: 22px;
@@ -593,28 +588,23 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
-<h1 id="profilesslurmconfigyaml--core"><code>profiles/slurm/config.yaml</code> — Core</h1>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-yaml"><span class="hljs-attr">executor:</span> <span class="hljs-string">slurm</span>
-<span class="hljs-attr">jobs:</span> <span class="hljs-number">150</span>
-<span class="hljs-attr">cores:</span> <span class="hljs-number">150</span>
-<span class="hljs-attr">retries:</span> <span class="hljs-number">1</span>
-<span class="hljs-attr">latency-wait:</span> <span class="hljs-number">30</span>
-<span class="hljs-attr">rerun-incomplete:</span> <span class="hljs-literal">true</span>
-<span class="hljs-attr">scheduler:</span> <span class="hljs-string">greedy</span>
-<span class="hljs-attr">slurm-logdir:</span> <span class="hljs-string">logs</span>
-
-<span class="hljs-comment"># rate limiting — the cure for socket timeouts</span>
-<span class="hljs-attr">max-jobs-per-timespan:</span> <span class="hljs-number">9</span><span class="hljs-string">/1s</span>
-<span class="hljs-attr">max-status-checks-per-second:</span> <span class="hljs-number">2</span>
-
-<span class="hljs-comment"># defaults for any rule that doesn&#x27;t override them</span>
-<span class="hljs-attr">default-resources:</span>
-  <span class="hljs-bullet">-</span> <span class="hljs-string">mem_mb=8000</span>
-  <span class="hljs-bullet">-</span> <span class="hljs-string">runtime=30</span>
-  <span class="hljs-bullet">-</span> <span class="hljs-string">cpus_per_task=8</span>
+;" data-marpit-pagination-total="23" data-size="16:9">
+<h1 id="invocation-before-and-after">Invocation: Before and After</h1>
+<p><strong>Snakemake 7</strong></p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-bash">sbatch --wrap <span class="hljs-string">&quot;snakemake --configfile config.json \
+  --cluster &#x27;sbatch -n {threads} --mem={resources.mem_mb} -t 01:00:00 ...&#x27; \
+  -j 100 --latency-wait 60 --rerun-incomplete&quot;</span>
 </code></pre>
-<p>The whole <code>--cluster</code> template string is now declarative. <code>slurm-logdir</code> replaces every per-rule <code>-o</code>/<code>-e</code> argument you used to hand-write.</p>
+<p><strong>Snakemake 9</strong></p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-bash">snakemake -p --snakefile Snakefile \
+    --configfile work/config/config.json \
+    --executor slurm \
+    --workflow-profile profiles/slurm \
+    --slurm-partition-config profiles/slurm/public.yaml \
+    --scheduler greedy -j 100 --cores 100 \
+    --latency-wait 30 --retries 3 --rerun-incomplete
+</code></pre>
+<p>Two new flags carry most of the meaning: <code>--workflow-profile</code> and <code>--slurm-partition-config</code>. Everything else lives in YAML now.</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="12" data-class="invert" data-paginate="true" data-theme="default" data-style="section {
   font-size: 22px;
@@ -652,25 +642,28 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
-<h1 id="profilesslurmconfigyaml--per-rule-resources"><code>profiles/slurm/config.yaml</code> — Per-Rule Resources</h1>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-yaml"><span class="hljs-attr">set-resources:</span>
-  <span class="hljs-attr">SplitFasta:</span>
-    <span class="hljs-attr">mem_mb:</span> <span class="hljs-number">4000</span>
-    <span class="hljs-attr">runtime:</span> <span class="hljs-number">10</span>
-    <span class="hljs-attr">cpus_per_task:</span> <span class="hljs-number">1</span>
+;" data-marpit-pagination-total="23" data-size="16:9">
+<h1 id="profilesslurmconfigyaml--core"><code>profiles/slurm/config.yaml</code> — Core</h1>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-yaml"><span class="hljs-attr">executor:</span> <span class="hljs-string">slurm</span>
+<span class="hljs-attr">jobs:</span> <span class="hljs-number">150</span>
+<span class="hljs-attr">cores:</span> <span class="hljs-number">150</span>
+<span class="hljs-attr">retries:</span> <span class="hljs-number">1</span>
+<span class="hljs-attr">latency-wait:</span> <span class="hljs-number">30</span>
+<span class="hljs-attr">rerun-incomplete:</span> <span class="hljs-literal">true</span>
+<span class="hljs-attr">scheduler:</span> <span class="hljs-string">greedy</span>
+<span class="hljs-attr">slurm-logdir:</span> <span class="hljs-string">logs</span>
 
-  <span class="hljs-attr">ReformatMutations:</span>
-    <span class="hljs-attr">mem_mb:</span> <span class="hljs-number">8000</span>
-    <span class="hljs-attr">runtime:</span> <span class="hljs-number">20</span>
-    <span class="hljs-attr">cpus_per_task:</span> <span class="hljs-number">1</span>
+<span class="hljs-comment"># rate limiting — the cure for socket timeouts</span>
+<span class="hljs-attr">max-jobs-per-timespan:</span> <span class="hljs-number">9</span><span class="hljs-string">/1s</span>
+<span class="hljs-attr">max-status-checks-per-second:</span> <span class="hljs-number">2</span>
 
-  <span class="hljs-attr">AssemblyDepth:</span>
-    <span class="hljs-attr">mem_mb:</span> <span class="hljs-number">64000</span>
-    <span class="hljs-attr">runtime:</span> <span class="hljs-number">480</span>
-    <span class="hljs-attr">cpus_per_task:</span> <span class="hljs-number">16</span>
+<span class="hljs-comment"># defaults for any rule that doesn&#x27;t override them</span>
+<span class="hljs-attr">default-resources:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-string">mem_mb=8000</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-string">runtime=30</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-string">cpus_per_task=8</span>
 </code></pre>
-<p>Right-sizing in YAML, not in the Snakefile. Means the workflow author and the cluster operator can tune resources independently — and rolling back a bad tuning is a <code>git revert</code> on one file.</p>
+<p>The whole <code>--cluster</code> template string is now declarative. <code>slurm-logdir</code> replaces every per-rule <code>-o</code>/<code>-e</code> argument you used to hand-write.</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="13" data-class="invert" data-paginate="true" data-theme="default" data-style="section {
   font-size: 22px;
@@ -708,22 +701,25 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
-<h1 id="automatic-partition-selection">Automatic Partition Selection</h1>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-yaml"><span class="hljs-comment"># profiles/slurm/public.yaml</span>
-<span class="hljs-attr">partitions:</span>
-  <span class="hljs-attr">public:</span>
-    <span class="hljs-attr">max_runtime:</span> <span class="hljs-number">10080</span>       <span class="hljs-comment"># 7 days</span>
-    <span class="hljs-attr">max_mem_mb:</span> <span class="hljs-number">500000</span>       <span class="hljs-comment"># 500 GB</span>
-    <span class="hljs-attr">max_cpus_per_task:</span> <span class="hljs-number">120</span>
-    <span class="hljs-attr">max_nodes:</span> <span class="hljs-number">24</span>
-  <span class="hljs-attr">htc:</span>
-    <span class="hljs-attr">max_runtime:</span> <span class="hljs-number">240</span>         <span class="hljs-comment"># 4 hours</span>
-    <span class="hljs-attr">max_mem_mb:</span> <span class="hljs-number">256000</span>
-    <span class="hljs-attr">max_cpus_per_task:</span> <span class="hljs-number">120</span>
-    <span class="hljs-attr">max_nodes:</span> <span class="hljs-number">24</span>
+;" data-marpit-pagination-total="23" data-size="16:9">
+<h1 id="profilesslurmconfigyaml--per-rule-resources"><code>profiles/slurm/config.yaml</code> — Per-Rule Resources</h1>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-yaml"><span class="hljs-attr">set-resources:</span>
+  <span class="hljs-attr">SplitFasta:</span>
+    <span class="hljs-attr">mem_mb:</span> <span class="hljs-number">4000</span>
+    <span class="hljs-attr">runtime:</span> <span class="hljs-number">10</span>
+    <span class="hljs-attr">cpus_per_task:</span> <span class="hljs-number">1</span>
+
+  <span class="hljs-attr">ReformatMutations:</span>
+    <span class="hljs-attr">mem_mb:</span> <span class="hljs-number">8000</span>
+    <span class="hljs-attr">runtime:</span> <span class="hljs-number">20</span>
+    <span class="hljs-attr">cpus_per_task:</span> <span class="hljs-number">1</span>
+
+  <span class="hljs-attr">AssemblyDepth:</span>
+    <span class="hljs-attr">mem_mb:</span> <span class="hljs-number">64000</span>
+    <span class="hljs-attr">runtime:</span> <span class="hljs-number">480</span>
+    <span class="hljs-attr">cpus_per_task:</span> <span class="hljs-number">16</span>
 </code></pre>
-<p>Pass with <code>--slurm-partition-config public.yaml</code>. The plugin matches each job's resource request against the table and picks the smallest partition that fits — the 10-minute <code>SplitFasta</code> job lands on <code>htc</code>, the 8-hour <code>AssemblyDepth</code> job lands on <code>public</code>. <strong>No more hardcoded <code>-p</code> flag; no more rule-by-rule partition logic.</strong></p>
+<p>Right-sizing in YAML, not in the Snakefile. Means the workflow author and the cluster operator can tune resources independently — and rolling back a bad tuning is a <code>git revert</code> on one file.</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="14" data-class="invert" data-paginate="true" data-theme="default" data-style="section {
   font-size: 22px;
@@ -761,26 +757,22 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
-<h1 id="resources-from-strings-to-lambdas">Resources: From Strings to Lambdas</h1>
-<p><strong>Snakemake 7</strong> — string-typed, fixed</p>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-python">rule MutateOffspring:
-    resources:
-        mem_mb = <span class="hljs-number">8000</span>,
-        runtime = <span class="hljs-string">&#x27;15m&#x27;</span>         <span class="hljs-comment"># string format</span>
+;" data-marpit-pagination-total="23" data-size="16:9">
+<h1 id="automatic-partition-selection">Automatic Partition Selection</h1>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-yaml"><span class="hljs-comment"># profiles/slurm/public.yaml</span>
+<span class="hljs-attr">partitions:</span>
+  <span class="hljs-attr">public:</span>
+    <span class="hljs-attr">max_runtime:</span> <span class="hljs-number">10080</span>       <span class="hljs-comment"># 7 days</span>
+    <span class="hljs-attr">max_mem_mb:</span> <span class="hljs-number">500000</span>       <span class="hljs-comment"># 500 GB</span>
+    <span class="hljs-attr">max_cpus_per_task:</span> <span class="hljs-number">120</span>
+    <span class="hljs-attr">max_nodes:</span> <span class="hljs-number">24</span>
+  <span class="hljs-attr">htc:</span>
+    <span class="hljs-attr">max_runtime:</span> <span class="hljs-number">240</span>         <span class="hljs-comment"># 4 hours</span>
+    <span class="hljs-attr">max_mem_mb:</span> <span class="hljs-number">256000</span>
+    <span class="hljs-attr">max_cpus_per_task:</span> <span class="hljs-number">120</span>
+    <span class="hljs-attr">max_nodes:</span> <span class="hljs-number">24</span>
 </code></pre>
-<p><strong>Snakemake 9</strong> — integer minutes, with <code>attempt</code>-based backoff</p>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-python">rule callHaplotypeCaller:
-    resources:
-        mem_mb  = <span class="hljs-keyword">lambda</span> wildcards, attempt: <span class="hljs-number">32000</span> + (<span class="hljs-number">16000</span> * (attempt - <span class="hljs-number">1</span>)),
-        runtime = <span class="hljs-keyword">lambda</span> wildcards, attempt: <span class="hljs-number">60</span>    + (<span class="hljs-number">30</span>    * (attempt - <span class="hljs-number">1</span>))
-</code></pre>
-<ul>
-<li>Attempt 1: 32 GB / 60 min  → OOM kill, SLURM exits with retry-eligible code</li>
-<li>Attempt 2: 48 GB / 90 min  → likely succeeds</li>
-<li>Attempt 3: 64 GB / 120 min → upper bound</li>
-</ul>
-<p><strong>Result on DETECT:</strong> four transient OOM/walltime failures across 907 jobs, all auto-recovered. Zero manual intervention.</p>
+<p>Pass with <code>--slurm-partition-config public.yaml</code>. The plugin matches each job's resource request against the table and picks the smallest partition that fits — the 10-minute <code>SplitFasta</code> job lands on <code>htc</code>, the 8-hour <code>AssemblyDepth</code> job lands on <code>public</code>. <strong>No more hardcoded <code>-p</code> flag; no more rule-by-rule partition logic.</strong></p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="15" data-class="invert" data-paginate="true" data-theme="default" data-style="section {
   font-size: 22px;
@@ -818,25 +810,26 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
-<h1 id="containers-per-rule-%E2%86%92-global">Containers: Per-Rule → Global</h1>
-<p><strong>Snakemake 7</strong> — repeat the directive on every GATK rule</p>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-python">rule MarkDuplicates:
-    singularity: <span class="hljs-string">&quot;container/gatk4.6.2.sif&quot;</span>
-    shell: <span class="hljs-string">&quot;gatk MarkDuplicates ...&quot;</span>
-
-rule BQSR:
-    singularity: <span class="hljs-string">&quot;container/gatk4.6.2.sif&quot;</span>
-    shell: <span class="hljs-string">&quot;gatk BaseRecalibrator ...&quot;</span>
+;" data-marpit-pagination-total="23" data-size="16:9">
+<h1 id="resources-from-strings-to-lambdas">Resources: From Strings to Lambdas</h1>
+<p><strong>Snakemake 7</strong> — string-typed, fixed</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-python">rule MutateOffspring:
+    resources:
+        mem_mb = <span class="hljs-number">8000</span>,
+        runtime = <span class="hljs-string">&#x27;15m&#x27;</span>         <span class="hljs-comment"># string format</span>
 </code></pre>
-<p><strong>Snakemake 9</strong> — global directive at the top of the Snakefile</p>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-python">GATK_CONTAINER = <span class="hljs-string">&quot;container/gatk4.6.2.sif&quot;</span>
-container: GATK_CONTAINER
-
-rule MarkDuplicates:
-    shell: <span class="hljs-string">&quot;gatk MarkDuplicates ...&quot;</span>
+<p><strong>Snakemake 9</strong> — integer minutes, with <code>attempt</code>-based backoff</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-python">rule callHaplotypeCaller:
+    resources:
+        mem_mb  = <span class="hljs-keyword">lambda</span> wildcards, attempt: <span class="hljs-number">32000</span> + (<span class="hljs-number">16000</span> * (attempt - <span class="hljs-number">1</span>)),
+        runtime = <span class="hljs-keyword">lambda</span> wildcards, attempt: <span class="hljs-number">60</span>    + (<span class="hljs-number">30</span>    * (attempt - <span class="hljs-number">1</span>))
 </code></pre>
-<p>Drives consistency. Adding a new GATK rule is no longer a chance to forget the directive and have it silently use whatever GATK happens to be on <code>$PATH</code>.</p>
+<ul>
+<li>Attempt 1: 32 GB / 60 min  → OOM kill, SLURM exits with retry-eligible code</li>
+<li>Attempt 2: 48 GB / 90 min  → likely succeeds</li>
+<li>Attempt 3: 64 GB / 120 min → upper bound</li>
+</ul>
+<p><strong>Result on DETECT:</strong> four transient OOM/walltime failures across 907 jobs, all auto-recovered. Zero manual intervention.</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="16" data-class="invert" data-paginate="true" data-theme="default" data-style="section {
   font-size: 22px;
@@ -874,29 +867,25 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
-<h1 id="the-python-path-gotcha">The Python-Path Gotcha</h1>
-<p>Not a Snakemake-version issue — a discipline issue. The migration was the forcing function.</p>
-<p><strong>Symptom:</strong> <code>python scripts/mutator.py</code> works on the login node, fails inside a SLURM job with <code>ModuleNotFoundError</code>. The compute node has a different <code>$PATH</code>.</p>
-<p><strong>Before — bare <code>python</code></strong> (what the Sn7 Snakefile actually shipped)</p>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-python">shell: <span class="hljs-string">&quot;python {snakedir}/scripts/mutator.py -i {input} ...&quot;</span>
-</code></pre>
-<p><strong>After — resolve from <code>$CONDA_PREFIX</code> at workflow load</strong></p>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_python_executable</span>():
-    conda_prefix = os.environ.get(<span class="hljs-string">&quot;CONDA_PREFIX&quot;</span>, <span class="hljs-string">&quot;&quot;</span>)
-    <span class="hljs-keyword">if</span> conda_prefix:
-        candidate = os.path.join(conda_prefix, <span class="hljs-string">&quot;bin&quot;</span>, <span class="hljs-string">&quot;python3&quot;</span>)
-        <span class="hljs-keyword">if</span> os.path.exists(candidate):
-            <span class="hljs-keyword">return</span> candidate
-    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;python3&quot;</span>
+;" data-marpit-pagination-total="23" data-size="16:9">
+<h1 id="containers-per-rule-%E2%86%92-global">Containers: Per-Rule → Global</h1>
+<p><strong>Snakemake 7</strong> — repeat the directive on every GATK rule</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-python">rule MarkDuplicates:
+    singularity: <span class="hljs-string">&quot;container/gatk4.6.2.sif&quot;</span>
+    shell: <span class="hljs-string">&quot;gatk MarkDuplicates ...&quot;</span>
 
-python_exec = get_python_executable()
-
-rule MutateOffspring:
-    params: python_exec = python_exec
-    shell: <span class="hljs-string">&quot;{params.python_exec} {snakedir}/scripts/mutator.py ...&quot;</span>
+rule BQSR:
+    singularity: <span class="hljs-string">&quot;container/gatk4.6.2.sif&quot;</span>
+    shell: <span class="hljs-string">&quot;gatk BaseRecalibrator ...&quot;</span>
 </code></pre>
-<p><code>params:</code> + top-level Python work in Snakemake 7 too — this pattern was always available. We just hadn't written it that way until the migration prompted the cleanup.</p>
+<p><strong>Snakemake 9</strong> — global directive at the top of the Snakefile</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-python">GATK_CONTAINER = <span class="hljs-string">&quot;container/gatk4.6.2.sif&quot;</span>
+container: GATK_CONTAINER
+
+rule MarkDuplicates:
+    shell: <span class="hljs-string">&quot;gatk MarkDuplicates ...&quot;</span>
+</code></pre>
+<p>Drives consistency. Adding a new GATK rule is no longer a chance to forget the directive and have it silently use whatever GATK happens to be on <code>$PATH</code>.</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="17" data-class="invert" data-paginate="true" data-theme="default" data-style="section {
   font-size: 22px;
@@ -934,15 +923,29 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
-<h1 id="rate-limiting-in-practice">Rate Limiting in Practice</h1>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-yaml"><span class="hljs-attr">max-jobs-per-timespan:</span> <span class="hljs-number">9</span><span class="hljs-string">/1s</span>
-<span class="hljs-attr">max-status-checks-per-second:</span> <span class="hljs-number">2</span>
+;" data-marpit-pagination-total="23" data-size="16:9">
+<h1 id="the-python-path-gotcha">The Python-Path Gotcha</h1>
+<p>Not a Snakemake-version issue — a discipline issue. The migration was the forcing function.</p>
+<p><strong>Symptom:</strong> <code>python scripts/mutator.py</code> works on the login node, fails inside a SLURM job with <code>ModuleNotFoundError</code>. The compute node has a different <code>$PATH</code>.</p>
+<p><strong>Before — bare <code>python</code></strong> (what the Sn7 Snakefile actually shipped)</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-python">shell: <span class="hljs-string">&quot;python {snakedir}/scripts/mutator.py -i {input} ...&quot;</span>
 </code></pre>
-<p>Two lines in <code>profiles/slurm/config.yaml</code>. They eliminated the failure mode that had been the dominant source of run failures.</p>
-<p><strong>Before:</strong> Snakemake fires hundreds of <code>sbatch</code> and <code>squeue</code> calls when a wide rule fans out. slurmctld saturates. Calls time out. Snakemake interprets the timeout as a failed submission. Random rules silently don't run.</p>
-<p><strong>After:</strong> the plugin enforces ≤9 submissions per second and ≤2 status checks per second cluster-wide. slurmctld never sees a burst. Run failures from this class: zero across 907 jobs.</p>
-<p>If you take one thing from this talk, it's <strong>set these two values.</strong></p>
+<p><strong>After — resolve from <code>$CONDA_PREFIX</code> at workflow load</strong></p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_python_executable</span>():
+    conda_prefix = os.environ.get(<span class="hljs-string">&quot;CONDA_PREFIX&quot;</span>, <span class="hljs-string">&quot;&quot;</span>)
+    <span class="hljs-keyword">if</span> conda_prefix:
+        candidate = os.path.join(conda_prefix, <span class="hljs-string">&quot;bin&quot;</span>, <span class="hljs-string">&quot;python3&quot;</span>)
+        <span class="hljs-keyword">if</span> os.path.exists(candidate):
+            <span class="hljs-keyword">return</span> candidate
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;python3&quot;</span>
+
+python_exec = get_python_executable()
+
+rule MutateOffspring:
+    params: python_exec = python_exec
+    shell: <span class="hljs-string">&quot;{params.python_exec} {snakedir}/scripts/mutator.py ...&quot;</span>
+</code></pre>
+<p><code>params:</code> + top-level Python work in Snakemake 7 too — this pattern was always available. We just hadn't written it that way until the migration prompted the cleanup.</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="18" data-class="invert" data-paginate="true" data-theme="default" data-style="section {
   font-size: 22px;
@@ -980,28 +983,15 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
-<h1 id="runsh-and-sbatchsh"><code>run.sh</code> and <code>sbatch.sh</code></h1>
-<p>Two thin wrappers. The deck doesn't have room for both — the shape is:</p>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-bash"><span class="hljs-meta">#!/bin/bash</span>
-<span class="hljs-built_in">set</span> -euo pipefail
-module load mamba/latest
-<span class="hljs-built_in">source</span> activate DETECT
-
-snakemake -p --snakefile Snakefile \
-    --configfile work/config/config.json \
-    --executor slurm \
-    --workflow-profile profiles/slurm \
-    --slurm-partition-config profiles/slurm/public.yaml \
-    --scheduler greedy -j 100 --cores 100 \
-    --latency-wait 30 --retries 3 --rerun-incomplete \
-    2&gt;&amp;1 | <span class="hljs-built_in">tee</span> logs/output.log
+;" data-marpit-pagination-total="23" data-size="16:9">
+<h1 id="rate-limiting-in-practice">Rate Limiting in Practice</h1>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-yaml"><span class="hljs-attr">max-jobs-per-timespan:</span> <span class="hljs-number">9</span><span class="hljs-string">/1s</span>
+<span class="hljs-attr">max-status-checks-per-second:</span> <span class="hljs-number">2</span>
 </code></pre>
-<ul>
-<li><strong><code>run.sh</code></strong> — runs on the login node. For testing.</li>
-<li><strong><code>sbatch.sh</code></strong> — same body, wrapped for <code>sbatch</code>. The <code>snakemake</code> driver itself becomes a SLURM job.</li>
-</ul>
-<p>Either way, the <em>contents</em> of the snakemake call are the same. Configuration lives in the profile.</p>
+<p>Two lines in <code>profiles/slurm/config.yaml</code>. They eliminated the failure mode that had been the dominant source of run failures.</p>
+<p><strong>Before:</strong> Snakemake fires hundreds of <code>sbatch</code> and <code>squeue</code> calls when a wide rule fans out. slurmctld saturates. Calls time out. Snakemake interprets the timeout as a failed submission. Random rules silently don't run.</p>
+<p><strong>After:</strong> the plugin enforces ≤9 submissions per second and ≤2 status checks per second cluster-wide. slurmctld never sees a burst. Run failures from this class: zero across 907 jobs.</p>
+<p>If you take one thing from this talk, it's <strong>set these two values.</strong></p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="19" data-class="invert" data-paginate="true" data-theme="default" data-style="section {
   font-size: 22px;
@@ -1039,16 +1029,28 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
-<h1 id="where-the-24-came-from">Where the 24% Came From</h1>
-<p>Same code, same data, same cluster — different scheduler behavior.</p>
+;" data-marpit-pagination-total="23" data-size="16:9">
+<h1 id="runsh-and-sbatchsh"><code>run.sh</code> and <code>sbatch.sh</code></h1>
+<p>Two thin wrappers. The deck doesn't have room for both — the shape is:</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-built_in">set</span> -euo pipefail
+module load mamba/latest
+<span class="hljs-built_in">source</span> activate DETECT
+
+snakemake -p --snakefile Snakefile \
+    --configfile work/config/config.json \
+    --executor slurm \
+    --workflow-profile profiles/slurm \
+    --slurm-partition-config profiles/slurm/public.yaml \
+    --scheduler greedy -j 100 --cores 100 \
+    --latency-wait 30 --retries 3 --rerun-incomplete \
+    2&gt;&amp;1 | <span class="hljs-built_in">tee</span> logs/output.log
+</code></pre>
 <ul>
-<li><strong>Right-sized resources</strong> — light rules like <code>SplitFasta</code> no longer request 64 GB and wait for a fat node. They land on <code>htc</code> in seconds.</li>
-<li><strong>Partition fit</strong> — short jobs go to <code>htc</code>, long jobs go to <code>public</code>. Queue waits drop because requests match what's available.</li>
-<li><strong>Retry recovery</strong> — transient OOMs add a few minutes, not a full re-run. Snakemake 7 had no automatic retry on resource failures.</li>
-<li><strong>No socket-timeout reruns</strong> — every job we submit actually reaches SLURM the first time.</li>
+<li><strong><code>run.sh</code></strong> — runs on the login node. For testing.</li>
+<li><strong><code>sbatch.sh</code></strong> — same body, wrapped for <code>sbatch</code>. The <code>snakemake</code> driver itself becomes a SLURM job.</li>
 </ul>
-<p>The Snakemake 9 executor plugin is doing what <code>--cluster</code> couldn't: behaving like a citizen of the cluster.</p>
+<p>Either way, the <em>contents</em> of the snakemake call are the same. Configuration lives in the profile.</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="20" data-class="invert" data-paginate="true" data-theme="default" data-style="section {
   font-size: 22px;
@@ -1086,21 +1088,16 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
-<h1 id="migration-checklist">Migration Checklist</h1>
-<p>If you're sitting on a Snakemake 7 workflow today:</p>
-<ol>
-<li><code>pip install snakemake-executor-plugin-slurm</code></li>
-<li>Drop <code>--cluster '...'</code>. Add <code>--executor slurm --workflow-profile profiles/slurm</code>.</li>
-<li>Create <code>profiles/slurm/config.yaml</code> — start with <code>executor: slurm</code>, <code>jobs:</code>, <code>default-resources:</code>.</li>
-<li><strong>Add the two rate-limit lines.</strong> Now, before anything else.</li>
-<li>Move per-rule resources from Snakefile <code>resources:</code> into profile <code>set-resources:</code>.</li>
-<li>Convert <code>runtime: '4h'</code> strings to integer minutes. Wrap in <code>lambda wildcards, attempt: ...</code> for backoff.</li>
-<li>Hoist per-rule <code>singularity:</code> directives to a global <code>container:</code> where appropriate.</li>
-<li>Replace bare <code>python</code> in shell rules with a <code>get_python_executable()</code> resolved at load time.</li>
-<li>Add <code>--slurm-partition-config partitions.yaml</code> once you have more than one partition shape.</li>
-<li>Run a single-chromosome dry-run before a full submission.</li>
-</ol>
+;" data-marpit-pagination-total="23" data-size="16:9">
+<h1 id="where-the-24-came-from">Where the 24% Came From</h1>
+<p>Same code, same data, same cluster — different scheduler behavior.</p>
+<ul>
+<li><strong>Right-sized resources</strong> — light rules like <code>SplitFasta</code> no longer request 64 GB and wait for a fat node. They land on <code>htc</code> in seconds.</li>
+<li><strong>Partition fit</strong> — short jobs go to <code>htc</code>, long jobs go to <code>public</code>. Queue waits drop because requests match what's available.</li>
+<li><strong>Retry recovery</strong> — transient OOMs add a few minutes, not a full re-run. Snakemake 7 had no automatic retry on resource failures.</li>
+<li><strong>No socket-timeout reruns</strong> — every job we submit actually reaches SLURM the first time.</li>
+</ul>
+<p>The Snakemake 9 executor plugin is doing what <code>--cluster</code> couldn't: behaving like a citizen of the cluster.</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="21" data-class="invert" data-paginate="true" data-theme="default" data-style="section {
   font-size: 22px;
@@ -1138,7 +1135,59 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
+;" data-marpit-pagination-total="23" data-size="16:9">
+<h1 id="migration-checklist">Migration Checklist</h1>
+<p>If you're sitting on a Snakemake 7 workflow today:</p>
+<ol>
+<li><code>pip install snakemake-executor-plugin-slurm</code></li>
+<li>Drop <code>--cluster '...'</code>. Add <code>--executor slurm --workflow-profile profiles/slurm</code>.</li>
+<li>Create <code>profiles/slurm/config.yaml</code> — start with <code>executor: slurm</code>, <code>jobs:</code>, <code>default-resources:</code>.</li>
+<li><strong>Add the two rate-limit lines.</strong> Now, before anything else.</li>
+<li>Move per-rule resources from Snakefile <code>resources:</code> into profile <code>set-resources:</code>.</li>
+<li>Convert <code>runtime: '4h'</code> strings to integer minutes. Wrap in <code>lambda wildcards, attempt: ...</code> for backoff.</li>
+<li>Hoist per-rule <code>singularity:</code> directives to a global <code>container:</code> where appropriate.</li>
+<li>Replace bare <code>python</code> in shell rules with a <code>get_python_executable()</code> resolved at load time.</li>
+<li>Add <code>--slurm-partition-config partitions.yaml</code> once you have more than one partition shape.</li>
+<li>Run a single-chromosome dry-run before a full submission.</li>
+</ol>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="22" data-class="invert" data-paginate="true" data-theme="default" data-style="section {
+  font-size: 22px;
+}
+h1 {
+  font-size: 40px;
+}
+h2 {
+  font-size: 32px;
+}
+pre, code {
+  font-size: 18px;
+}
+table {
+  font-size: 22px;
+}
+section.lead h1 {
+  font-size: 52px;
+}
+" lang="en-US" class="invert" data-marpit-pagination="22" style="--class:invert;--paginate:true;--theme:default;--style:section {
+  font-size: 22px;
+}
+h1 {
+  font-size: 40px;
+}
+h2 {
+  font-size: 32px;
+}
+pre, code {
+  font-size: 18px;
+}
+table {
+  font-size: 22px;
+}
+section.lead h1 {
+  font-size: 52px;
+}
+;" data-marpit-pagination-total="23" data-size="16:9">
 <h1 id="references">References</h1>
 <p><strong>This work</strong></p>
 <ul>
@@ -1156,7 +1205,7 @@ section.lead h1 {
 <li><code>snakemake --help-all</code> after installing the SLURM plugin lists every <code>--slurm-*</code> flag</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="22" data-class="lead invert" data-paginate="true" data-theme="default" data-style="section {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="23" data-class="lead invert" data-paginate="true" data-theme="default" data-style="section {
   font-size: 22px;
 }
 h1 {
@@ -1174,7 +1223,7 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-" lang="en-US" class="lead invert" data-marpit-pagination="22" style="--class:lead invert;--paginate:true;--theme:default;--style:section {
+" lang="en-US" class="lead invert" data-marpit-pagination="23" style="--class:lead invert;--paginate:true;--theme:default;--style:section {
   font-size: 22px;
 }
 h1 {
@@ -1192,7 +1241,7 @@ table {
 section.lead h1 {
   font-size: 52px;
 }
-;" data-marpit-pagination-total="22" data-size="16:9">
+;" data-marpit-pagination-total="23" data-size="16:9">
 <h1 id="thank-you">Thank You</h1>
 <h2 id="questions">Questions?</h2>
 <p>Alan Chapman — <code>alan.chapman@asu.edu</code><br />
@@ -1306,6 +1355,18 @@ The new model: instead of a flag that takes a string, scheduler integration is a
 
 The plugin uses SLURM properly — it submits with sbatch but it polls with sacct, with sensible backoff. It implements rate limiting. It handles automatic retries. It picks partitions. It's not just a refactor of --cluster; it's a different *architecture* for how Snakemake talks to your scheduler.</p></div><div class="bespoke-marp-note" data-index="8" tabindex="0"><p>PRESENTER NOTES
 
+What actually happened in the Snakemake project.
+
+Snakemake 8 came out in February 2024. The big change was: --cluster is deprecated. We're moving to an executor plugin interface instead. You'll get a deprecation warning if you use the old flag, but it still works.
+
+Snakemake 9 came out in September 2024 and removed --cluster entirely. If you upgrade to Snakemake 9 with a workflow that depends on --cluster, your workflow stops working. There is no compatibility shim. There is no --legacy-cluster flag. It's gone.
+
+So if you're running Snakemake 7 today and you're on a SLURM cluster, you have a deadline. It's not &quot;this year&quot;; it's &quot;the next time you do a major upgrade.&quot; The migration isn't optional, and there's no half-step.
+
+The new model: instead of a flag that takes a string, scheduler integration is a *plugin* that Snakemake loads at runtime. You pip install it, you tell snakemake which executor to use, and the plugin owns the integration.
+
+The plugin uses SLURM properly — it submits with sbatch but it polls with sacct, with sensible backoff. It implements rate limiting. It handles automatic retries. It picks partitions. It's not just a refactor of --cluster; it's a different *architecture* for how Snakemake talks to your scheduler.</p></div><div class="bespoke-marp-note" data-index="9" tabindex="0"><p>PRESENTER NOTES
+
 Walk through what you get for free once you install the SLURM plugin.
 
 Native submission — no shell template. Resources are passed through a typed Python interface. Type errors get caught at submission time, not deep inside a job.
@@ -1320,7 +1381,7 @@ Retry semantics — the `attempt` variable gets wired into Snakemake's own retry
 
 Profile-based configuration — instead of a shell command with twelve flags, you have a YAML file checked into your repo. Reproducible. Diffable. Reviewable.
 
-Quick aside: there's a *second* plugin called cluster-generic. It's basically a --cluster workalike that lets you keep using your old shell template under the new executor interface. Don't use it for new work. It exists for people who need a shortest-path migration off Snakemake 7 without rethinking anything. The SLURM plugin is the actual destination.</p></div><div class="bespoke-marp-note" data-index="9" tabindex="0"><p>PRESENTER NOTES
+Quick aside: there's a *second* plugin called cluster-generic. It's basically a --cluster workalike that lets you keep using your old shell template under the new executor interface. Don't use it for new work. It exists for people who need a shortest-path migration off Snakemake 7 without rethinking anything. The SLURM plugin is the actual destination.</p></div><div class="bespoke-marp-note" data-index="10" tabindex="0"><p>PRESENTER NOTES
 
 Side-by-side. This is the visual takeaway of the whole migration.
 
@@ -1334,7 +1395,7 @@ Two new flags carry the meaning:
 
 Everything that used to live in that shell string now lives in checked-in YAML. Which means you can review it. You can diff it. You can roll it back. You can have one profile per cluster — Sol gets one config, Phoenix gets another, and the snakemake invocation itself is identical.
 
-We're going to spend the next few slides walking through what's *in* those YAML files.</p></div><div class="bespoke-marp-note" data-index="10" tabindex="0"><p>PRESENTER NOTES
+We're going to spend the next few slides walking through what's *in* those YAML files.</p></div><div class="bespoke-marp-note" data-index="11" tabindex="0"><p>PRESENTER NOTES
 
 This is the top half of the profile. Walk through it block by block.
 
@@ -1344,7 +1405,7 @@ Middle block: rate limiting. We're going to come back to this on its own slide b
 
 Bottom block: default resources. If a rule doesn't say otherwise, it gets 8 GB of memory, 30 minutes of walltime, and 8 CPUs. The plugin uses these defaults to pick a partition, which we'll see shortly.
 
-The whole shell-string approach is gone. Everything's declarative. And one consequence — small but real — is that you can no longer accidentally have a typo in your sbatch flags that only fires for one specific rule six hours into a run. The validation happens up front.</p></div><div class="bespoke-marp-note" data-index="11" tabindex="0"><p>PRESENTER NOTES
+The whole shell-string approach is gone. Everything's declarative. And one consequence — small but real — is that you can no longer accidentally have a typo in your sbatch flags that only fires for one specific rule six hours into a run. The validation happens up front.</p></div><div class="bespoke-marp-note" data-index="12" tabindex="0"><p>PRESENTER NOTES
 
 Bottom half of the profile: per-rule resource overrides. This is the `set-resources` block.
 
@@ -1354,7 +1415,7 @@ Why is this nice? Because in Snakemake 7, all of this lived in the Snakefile in 
 
 In Snakemake 9, the workflow author writes the Snakefile and ships it. The cluster operator — that's me, that's many of you — owns the profile. We tune resources for our cluster's queue policy, our memory layout, our user community. If a tuning is bad, we git revert one file. The Snakefile is untouched.
 
-This separation also means the *same Snakefile* can run on multiple clusters with different profiles. DETECT runs on both Sol and Phoenix at ASU. Same Snakefile, different profile per cluster.</p></div><div class="bespoke-marp-note" data-index="12" tabindex="0"><p>PRESENTER NOTES
+This separation also means the *same Snakefile* can run on multiple clusters with different profiles. DETECT runs on both Sol and Phoenix at ASU. Same Snakefile, different profile per cluster.</p></div><div class="bespoke-marp-note" data-index="13" tabindex="0"><p>PRESENTER NOTES
 
 Automatic partition selection. This was a big win.
 
@@ -1366,7 +1427,7 @@ So the SplitFasta job at 4 GB and 10 minutes lands on htc. It clears immediately
 
 In Snakemake 7, every job went to the cluster default. Often that was a long-job partition with deep queue waits — even for jobs that should have cleared in 30 seconds on htc. That's a chunk of the speedup we'll attribute later. Better partition fit = shorter queue waits = lower wall time.
 
-If your cluster has a single partition this slide is less relevant. If it has two or more, this is the main benefit you're not getting today.</p></div><div class="bespoke-marp-note" data-index="13" tabindex="0"><p>PRESENTER NOTES
+If your cluster has a single partition this slide is less relevant. If it has two or more, this is the main benefit you're not getting today.</p></div><div class="bespoke-marp-note" data-index="14" tabindex="0"><p>PRESENTER NOTES
 
 This is one of my favorite changes.
 
@@ -1392,7 +1453,7 @@ Real numbers from DETECT in February: across three production runs totaling 907 
 
 There *is* one real Sn9 difference worth knowing: in Sn7 under `--cluster`, you had to manually wire `{resources.runtime}` into your sbatch template string for it to do anything — the lambda would evaluate, but if your template didn't reference the value, SLURM never saw it. In Sn9 the SLURM plugin consumes `runtime` natively and passes it as `--time`. So the pattern is older than the migration; what Sn9 added is making it *harder to forget to wire up*.
 
-Same lesson as slide 15: the migration is a forcing function for the discipline, not the source of the capability.</p></div><div class="bespoke-marp-note" data-index="14" tabindex="0"><p>PRESENTER NOTES
+Same lesson as slide 15: the migration is a forcing function for the discipline, not the source of the capability.</p></div><div class="bespoke-marp-note" data-index="15" tabindex="0"><p>PRESENTER NOTES
 
 Quick one. Containers.
 
@@ -1402,7 +1463,7 @@ In Snakemake 9, you set a global `container:` directive at the top of the Snakef
 
 You can still override per-rule if you need to. But the default is now sensible.
 
-If your workflow uses singularity or apptainer at all, hoist it to global. It's a one-day refactor that pays back forever.</p></div><div class="bespoke-marp-note" data-index="15" tabindex="0"><p>PRESENTER NOTES
+If your workflow uses singularity or apptainer at all, hoist it to global. It's a one-day refactor that pays back forever.</p></div><div class="bespoke-marp-note" data-index="16" tabindex="0"><p>PRESENTER NOTES
 
 I want to be honest about this one: it's the slide where I out myself as having shipped a bug.
 
@@ -1418,7 +1479,7 @@ Now the part I want to be honest about: **none of this required Snakemake 9.** T
 
 So the migration didn't *enable* this fix. It was a forcing function. When you're already rewriting the resource declarations and adding the executor plugin and reorganizing the profile, you read every rule, and the bare-`python` smell finally registers.
 
-That's a pattern worth naming explicitly: half of what a big migration delivers isn't the new platform's features — it's the technical-debt cleanup that the rewrite forces you to do. Worth keeping in mind when someone asks you to justify a migration on feature-list grounds.</p></div><div class="bespoke-marp-note" data-index="16" tabindex="0"><p>PRESENTER NOTES
+That's a pattern worth naming explicitly: half of what a big migration delivers isn't the new platform's features — it's the technical-debt cleanup that the rewrite forces you to do. Worth keeping in mind when someone asks you to justify a migration on feature-list grounds.</p></div><div class="bespoke-marp-note" data-index="17" tabindex="0"><p>PRESENTER NOTES
 
 If you only remember one slide from this talk, this is it.
 
@@ -1432,7 +1493,7 @@ After: the plugin enforces these limits cluster-wide. slurmctld is never under b
 
 For the cluster operators in the room: this is the setting your users *don't know they need*. If you're seeing slurmctld socket pressure from Snakemake users — and you probably are — these two lines are the fix. Send them this slide.
 
-Numbers to tune for your cluster: 9/1s is conservative. Some clusters can handle more, some less. Start there, watch slurmctld load, raise it if you have headroom.</p></div><div class="bespoke-marp-note" data-index="17" tabindex="0"><p>PRESENTER NOTES
+Numbers to tune for your cluster: 9/1s is conservative. Some clusters can handle more, some less. Start there, watch slurmctld load, raise it if you have headroom.</p></div><div class="bespoke-marp-note" data-index="18" tabindex="0"><p>PRESENTER NOTES
 
 Quick operational note before we wrap.
 
@@ -1446,7 +1507,7 @@ Notice what's *not* in either script. No --cluster string. No partition flag. No
 
 This separation matters operationally: the lab can change which cluster they're targeting, or tune resources, without touching either run.sh or sbatch.sh. They edit the profile.
 
-(If you're tight on time in your own talk, this slide is the most cuttable. The mechanism is obvious once you've seen the profile.)</p></div><div class="bespoke-marp-note" data-index="18" tabindex="0"><p>PRESENTER NOTES
+(If you're tight on time in your own talk, this slide is the most cuttable. The mechanism is obvious once you've seen the profile.)</p></div><div class="bespoke-marp-note" data-index="19" tabindex="0"><p>PRESENTER NOTES
 
 Coming back to that 24% from the third slide. Where did it actually come from?
 
@@ -1462,7 +1523,7 @@ Three. Retry recovery. In Snakemake 7, if a job OOMed, the run failed and you re
 
 Four. No socket-timeout reruns. We're not losing jobs to slurmctld pressure anymore.
 
-Add it up and you get 24%. None of it is faster code. All of it is the workflow behaving like a better citizen of the cluster — and the cluster rewarding that behavior with shorter queues.</p></div><div class="bespoke-marp-note" data-index="19" tabindex="0"><p>PRESENTER NOTES
+Add it up and you get 24%. None of it is faster code. All of it is the workflow behaving like a better citizen of the cluster — and the cluster rewarding that behavior with shorter queues.</p></div><div class="bespoke-marp-note" data-index="20" tabindex="0"><p>PRESENTER NOTES
 
 This is the takeaway slide. Photograph this one if you only photograph one.
 
@@ -1488,7 +1549,7 @@ Step 10: always test on a single chromosome before submitting a full production 
 
 If a workflow author in your community wants help with this, this list is the order I'd hand them.
 
-That's the talk. References next, then questions.</p></div><div class="bespoke-marp-note" data-index="20" tabindex="0"><p>PRESENTER NOTES
+That's the talk. References next, then questions.</p></div><div class="bespoke-marp-note" data-index="21" tabindex="0"><p>PRESENTER NOTES
 
 Quick reference slide. Three buckets:
 
@@ -1496,7 +1557,7 @@ DETECT itself, in case you want to look at a real Snakemake 9 + SLURM workflow e
 
 Snakemake official docs and the plugin repos. The SLURM plugin repo's README is genuinely good — the maintainers are responsive.
 
-For the migration story, the Snakemake 8 release notes have the official statement of the --cluster deprecation. And `snakemake --help-all` after installing the plugin will list every --slurm-* flag the plugin exposes — there are more than I covered today. Worth a scroll.</p></div><div class="bespoke-marp-note" data-index="21" tabindex="0"><p>PRESENTER NOTES
+For the migration story, the Snakemake 8 release notes have the official statement of the --cluster deprecation. And `snakemake --help-all` after installing the plugin will list every --slurm-* flag the plugin exposes — there are more than I covered today. Worth a scroll.</p></div><div class="bespoke-marp-note" data-index="22" tabindex="0"><p>PRESENTER NOTES
 
 Thank you. Happy to take questions.
 
