@@ -143,6 +143,43 @@ That worked fine for years. Lots of papers were written on top of this. But it h
 
 # The Real DETECT Snakemake 7 Invocation
 
+```bash
+sbatch -n1 --job-name demo_detect_superjob \
+  -o logs/demo_detect.out -e logs/demo_detect.err \
+  --wrap "snakemake -p --configfile config.json -s Snakefile \
+    --default-resources mem_mb=8000 \
+    --scheduler greedy -j 100 --latency-wait 60 \
+    --keep-target-files --rerun-incomplete \
+    --cluster 'sbatch -n {threads} --mem={resources.mem_mb} -t 01:00:00 \
+      -o logs/{rulename}.{jobid}.out \
+      -e logs/{rulename}.{jobid}.err'"
+```
+
+- An outer `sbatch --wrap` that runs `snakemake`…
+- …which runs an inner `sbatch …` for every rule invocation.
+- Resources are pasted into a string. Times are hardcoded (`-t 01:00:00`). Partition? Whatever the cluster defaults to.
+
+<!--
+PRESENTER NOTES
+
+This is the real submission command from DETECT's Snakemake 7 README. Not a strawman — this is what the lab was actually running.
+
+Read it from the outside in. There's an outer sbatch that wraps the whole thing — that's because snakemake itself is long-running, and you don't want it sitting on a login node for 26 hours. So the snakemake driver itself is a SLURM job.
+
+Inside the wrap, you have snakemake invoking another sbatch — that's the --cluster string — for every rule that fires. So the outer sbatch is the orchestrator, and it spawns hundreds of inner sbatches over the run.
+
+Things to call out:
+  - "-t 01:00:00" — every single job gets a one-hour walltime. Doesn't matter if it's a 30-second sed or an 8-hour assembly.
+  - No -p flag. Whatever queue the cluster defaults you into, that's where every job goes.
+  - mem_mb is whatever the rule declared in the Snakefile, pasted in. No retry, no backoff.
+
+This worked. People built careers on this. But it doesn't scale gracefully — and "doesn't scale gracefully" is what the next slide is about.
+-->
+
+---
+
+# The Real DETECT Snakemake 7 Invocation
+
 <img src="img/nestingdolls.png" style="position: absolute; top: 50px; left: 903px; width: 278px; height: 242px; opacity: 0.5;" />
 
 ```bash
