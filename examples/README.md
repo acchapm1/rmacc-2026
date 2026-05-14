@@ -19,8 +19,10 @@ examples/
 │   ├── README.md
 │   ├── Snakefile                   # 4 rules; per-rule singularity:, inline resources:
 │   ├── config.yaml                 # sample list + paths
-│   ├── env.yml                     # mamba env: snakemake 7.32.4
-│   └── run.sh                      # legacy --cluster 'sbatch ...' invocation
+│   ├── env.yml                     # mamba env: snakemake 7.32.4 + tooling
+│   ├── run.sh                      # legacy --cluster 'sbatch ...' invocation
+│   ├── scripts/                    # identical to snakemake9/scripts/
+│   └── container/                  # identical recipe to snakemake9/container/
 │
 └── snakemake9/                     # current patterns — what we migrated TO
     ├── README.md
@@ -84,21 +86,34 @@ diff -u snakemake7/run.sh    snakemake9/run.sh
 
 ## How to use these examples
 
-`snakemake9/` is **runnable end-to-end** on any SLURM cluster with apptainer —
-it ships a `scripts/fetch_example_data.sh` that builds a tiny synthetic dataset
-(E. coli + simulated reads, <10 MB total). See `snakemake9/README.md` for the
-exact steps.
+Both variants are **runnable end-to-end** on any SLURM cluster with
+apptainer. Each ships `scripts/fetch_example_data.sh` that builds the same
+tiny synthetic dataset (E. coli + simulated reads, <10 MB total) and a
+container recipe that produces a byte-identical image. The only things
+that differ between them are the Snakemake-level patterns the talk is
+about.
 
-`snakemake7/` is **illustrative only** — it intentionally has no container
-build and the legacy `--cluster` submission would need cluster-specific
-sbatch flags filled in. Read it as an archive of patterns to compare against,
-not a thing to run.
+Suggested order:
 
-1. Read the per-directory `README.md` for the patterns being demonstrated.
-2. `diff` matching files between `snakemake7/` and `snakemake9/` to see the
-   migration mechanically.
-3. Run `snakemake9/` end-to-end if you want to prove the wiring works on
-   your cluster.
+1. Read each subdir's `README.md` for the patterns being demonstrated.
+2. `diff` matching files between `snakemake7/` and `snakemake9/` to see
+   the migration mechanically — Snakefile, run scripts, env, README:
+
+   ```bash
+   diff -u snakemake7/Snakefile snakemake9/Snakefile
+   diff -u snakemake7/run.sh    snakemake9/run.sh
+   diff -u snakemake7/env.yml   snakemake9/env.yml
+   ```
+
+3. Run **both** on your cluster, then diff the outputs:
+
+   ```bash
+   diff snakemake7/results/sampleA.report.txt snakemake9/results/sampleA.report.txt
+   ```
+
+   They should be byte-identical given the same wgsim random seed. That's
+   the migration story in one line: same inputs in, same outputs out,
+   completely different orchestration.
 
 ## Related files in the repo root
 

@@ -2,5 +2,6 @@ samples:
   - sampleA
   - sampleB
 
+reads_dir: data/reads
 reference: data/ref
 outdir:    results

@@ -1,0 +1,42 @@
+Bootstrap: docker
+From: condaforge/miniforge3:latest
+
+# =============================================================================
+# tools.def — minimal Apptainer recipe for the example Snakefiles.
+#
+# Contains exactly the three binaries the example rules call:
+#   bwa       (rule: align)
+#   samtools  (rule: align)
+#   gatk      (rule: call_variants)
+#
+# Build:
+#   apptainer build tools.sif tools.def
+#
+# The resulting image is referenced from the Snakefile as:
+#   container: "container/tools.sif"
+# =============================================================================
+
+%post
+    set -euo pipefail
+
+    # Install all three tools from bioconda into the base env. miniforge3
+    # already has conda-forge configured; adding bioconda is enough.
+    mamba install -y -n base -c bioconda -c conda-forge \
+        bwa=0.7.18 \
+        samtools=1.21 \
+        gatk4=4.6.2.0
+
+    mamba clean -afy
+
+%environment
+    export LC_ALL=C
+    export PATH=/opt/conda/bin:$PATH
+
+%test
+    bwa      2>&1 | head -n 3
+    samtools --version | head -n 1
+    gatk     --version
+
+%labels
+    Purpose "Minimal toolchain for the snakemake9 example workflow"
+    Tools   "bwa 0.7.18, samtools 1.21, gatk 4.6.2.0"

@@ -14,6 +14,7 @@
 configfile: "config.yaml"
 
 SAMPLES   = config["samples"]
+READS_DIR = config["reads_dir"]
 REF       = config["reference"]
 OUTDIR    = config["outdir"]
 CONTAINER = "container/tools.sif"
@@ -27,9 +28,11 @@ rule all:
 # ---- 1. Split input: light, fast, Python-only -------------------------------
 rule split_input:
     input:
-        f"{REF}/{{sample}}.fa"
+        f"{READS_DIR}/{{sample}}.fq"
     output:
         f"{OUTDIR}/{{sample}}.chunks.done"
+    params:
+        chunk_dir = f"{OUTDIR}/{{sample}}_chunks"
     resources:
         mem_mb  = 4000,
         runtime = '15m'          # string format — Snakemake 7 accepts this
@@ -38,7 +41,7 @@ rule split_input:
         # the compute node, which is rarely the conda env you activated on
         # the login node. Source of ModuleNotFoundError surprises.
         "python scripts/split_input.py "
-        "--in {input} --outdir {OUTDIR}/{wildcards.sample}_chunks "
+        "--in {input} --outdir {params.chunk_dir} "
         "&& touch {output}"
 
 
@@ -48,22 +51,28 @@ rule align:
         chunks = f"{OUTDIR}/{{sample}}.chunks.done",
         ref    = f"{REF}/genome.fa"
     output:
-        f"{OUTDIR}/{{sample}}.bam"
+        bam = f"{OUTDIR}/{{sample}}.bam",
+        bai = f"{OUTDIR}/{{sample}}.bam.bai"
+    params:
+        chunk_dir = f"{OUTDIR}/{{sample}}_chunks",
+        rg        = r"@RG\tID:{sample}\tSM:{sample}\tLB:{sample}\tPL:ILLUMINA"
     singularity: CONTAINER       # per-rule directive — repeated below
     resources:
         mem_mb  = 32000,
         runtime = '4h'           # string; no retry-with-more on OOM/walltime
     threads: 8
     shell:
-        "bwa mem -t {threads} {input.ref} "
-        "{OUTDIR}/{wildcards.sample}_chunks/*.fa "
-        "| samtools sort -@ {threads} -o {output} -"
+        "cat {params.chunk_dir}/chunk_*.fa "
+        "| bwa mem -t {threads} -R '{params.rg}' {input.ref} - "
+        "| samtools sort -@ {threads} -o {output.bam} - "
+        "&& samtools index {output.bam}"
 
 
 # ---- 3. Call variants: containerized, heavy ---------------------------------
 rule call_variants:
     input:
         bam = f"{OUTDIR}/{{sample}}.bam",
+        bai = f"{OUTDIR}/{{sample}}.bam.bai",
         ref = f"{REF}/genome.fa"
     output:
         f"{OUTDIR}/{{sample}}.vcf"
