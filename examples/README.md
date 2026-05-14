@@ -94,5 +94,3 @@ intentionally has no working container build. To exercise them:
 ## Related files in the repo root
 
 - `../rmacc-slides.md` — the talk these examples support
-- `../COMPARISON.md` — long-form Sn7-vs-Sn9 migration narrative
-- `../DETECT-CIREN.md` — CIREN-project-flavored version of the comparison
