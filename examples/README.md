@@ -73,7 +73,8 @@ diff -u snakemake7/run.sh    snakemake9/run.sh
 | Integer-minute runtimes (not `'4h'`) | `set-resources:` |
 | Rate limiting (`max-jobs-per-timespan`, `max-status-checks-per-second`) | `profiles/slurm/config.yaml` |
 | Automatic partition selection from a partition table | `profiles/slurm/public.yaml` + `--slurm-partition-config` |
-| `--executor slurm` + `--workflow-profile` invocation | `run.sh`, `sbatch.sh` |
+| `executor: slurm` set in profile (not on CLI) | `profiles/slurm/config.yaml` |
+| `--workflow-profile` invocation | `run.sh`, `sbatch.sh` |
 | Driver-as-SLURM-job pattern | `sbatch.sh` |
 | Apptainer container recipe | `container/tools.def` |
 

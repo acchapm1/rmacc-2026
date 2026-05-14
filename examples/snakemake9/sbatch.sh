@@ -18,12 +18,7 @@ source activate example-env
 mkdir -p logs/slurm
 
 snakemake -p \
-    --snakefile Snakefile \
-    --configfile config.yaml \
-    --executor slurm \
-    --workflow-profile profiles/slurm \
-    --slurm-partition-config profiles/slurm/public.yaml \
-    --scheduler greedy \
-    --jobs 100 --cores 100 \
-    --latency-wait 30 --retries 3 --rerun-incomplete \
-    --use-singularity
+  --snakefile Snakefile \
+  --configfile config.yaml \
+  --workflow-profile profiles/slurm \
+  --slurm-partition-config profiles/slurm/public.yaml

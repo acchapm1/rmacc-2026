@@ -15,13 +15,8 @@ set -euo pipefail
 mkdir -p logs/slurm
 
 snakemake -p \
-    --snakefile Snakefile \
-    --configfile config.yaml \
-    --executor slurm \
-    --workflow-profile profiles/slurm \
-    --slurm-partition-config profiles/slurm/public.yaml \
-    --scheduler greedy \
-    --jobs 100 --cores 100 \
-    --latency-wait 30 --retries 3 --rerun-incomplete \
-    --use-singularity \
-    2>&1 | tee logs/output.log
+  --snakefile Snakefile \
+  --configfile config.yaml \
+  --workflow-profile profiles/slurm \
+  --slurm-partition-config profiles/slurm/public.yaml \
+  2>&1 | tee logs/output.log
